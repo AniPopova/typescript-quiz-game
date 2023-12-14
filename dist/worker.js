@@ -10,9 +10,18 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
 import { BlobWriter, TextReader, ZipWriter, } from "https://unpkg.com/@zip.js/zip.js/index.js";
 onmessage = (e) => __awaiter(void 0, void 0, void 0, function* () {
     try {
+        const preferencesString = e.data.preferences || '{}';
+        const resultsString = e.data.results || '{}';
+        const questionsArray = e.data.questions || [];
         const incorrectA = Number(e.data.incorrectAnswers) || 0;
         const correctA = Number(e.data.correctAnswers) || 0;
-        const text = `You have a ${correctA} correct answers and a ${incorrectA} incorrect answers`;
+        // Data from localStorage and questionsArray
+        const text = `
+      Preferences: ${preferencesString}
+      Results: ${resultsString}
+      Questions: ${JSON.stringify(questionsArray)}
+      You have ${correctA} correct answers and ${incorrectA} incorrect answers
+    `;
         const zipWriter = new ZipWriter(new BlobWriter("application/zip"));
         yield zipWriter.add("quiz_data.txt", new TextReader(text));
         const blob = yield zipWriter.close();

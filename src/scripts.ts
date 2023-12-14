@@ -50,7 +50,6 @@ function fetchRandomCatPicture() {
 
 // LOAD DATA FROM LOCAL STORAGE
 function loadPreferencesAndResults() {
-
   const preferencesString = localStorage.getItem("quizPreferences");
   const resultsString = localStorage.getItem("quizResults");
 
@@ -68,6 +67,7 @@ function loadPreferencesAndResults() {
   }
 }
 
+//COMMON FUNCTIONALITY FOR PREFERENCES ADN RESULTS
 function submitForm(event: Event, questionIndex: number, correctAnswer: string) {
   event.preventDefault();
   const selectedOption = document.querySelector(
@@ -85,6 +85,7 @@ function submitForm(event: Event, questionIndex: number, correctAnswer: string) 
   }
 }
 
+//SAVE EVERYTHING FROM USER
 function savePreferencesAndResults() {
   const preferences = {
     name: userName.value,
@@ -102,7 +103,7 @@ function savePreferencesAndResults() {
   localStorage.setItem("quizResults", JSON.stringify(results));
 }
 
-
+//INITIAL START
 function startQuiz() {
   userForm.classList.add('hidden');
   quizSection.innerHTML = "";
@@ -126,7 +127,6 @@ function startQuiz() {
     .catch((error: Error) => console.error("Error fetching trivia questions:", error));
 
 }
-
 
 // GENERATE QUESTIONS BASED ON USER CHOICE
 function displayQuestions(questions: Question[]) {
@@ -172,6 +172,7 @@ function displayQuestions(questions: Question[]) {
   });
 }
 
+//START NEW QUIZ AFTER FINISH PREVIOUS ONE
 function startNewQuiz() {
   buttonSection.classList.add('hidden');
   userForm.classList.remove('hidden');
@@ -184,18 +185,18 @@ function startNewQuiz() {
   incorrectAnswerCounter = 0;
 }
 
-
+//SHUFFLE THE CORRECT ANSWERS IN THE QUESTIONS 
 function shuffle(array: Array<string>) {
   return array.sort(() => Math.random() - 0.5);
 }
 
-
+//DISPLAY RESULTS OF THE CURRENT USER
 function displayResults() {
   resultsAnswers.classList.remove('hidden');
   resultsAnswers.innerHTML = '';
   downloadButton.classList.remove('hidden');
   startNewQuizButton.classList.remove('hidden');
-  
+
   questionsArray.forEach((question, index) => {
     const userAnswer = localStorage.getItem(`userAnswer_q${index + 1}`) as string;
     const isCorrect: boolean = userAnswer === question.correct_answer;
@@ -218,44 +219,24 @@ function displayResults() {
   overallResultCard.textContent = `Overall Results: correct answers: ${correctAnswerCounter} and incorrect answers: ${incorrectAnswerCounter}`;
   resultsAnswers.appendChild(answersCard);
   resultsAnswers.appendChild(overallResultCard);
+  savePreferencesAndResults();
 }
 
+//LOAD DATA FROM LOCAL STORAGE AND USE IT FOR THE DOWNLOAD FILE
 function downloadUserData() {
-
-  const userPreferences = {
-    category: questionsCategory.value,
-    difficulty: questionsDifficulty.value,
-    numQuestions: numberOfQuestions.value,
-  };
-
-  const quizResults = {
-    correctAnswers: correctAnswerCounter,
-    incorrectAnswers: incorrectAnswerCounter,
-    questions: questionsArray.map((question, index) => {
-      const userAnswer = localStorage.getItem(`userAnswer_q${index + 1}`);
-      const isCorrect = userAnswer === question.correct_answer;
-
-      return {
-        questionNumber: index + 1,
-        questionText: question.question,
-        userAnswer: userAnswer,
-        correctAnswer: question.correct_answer,
-        status: isCorrect ? 'Correct' : 'Incorrect',
-      };
-    }),
-  };
+  const preferencesString = localStorage.getItem("quizPreferences");
+  const resultsString = localStorage.getItem("quizResults");
 
   const downloadData = {
-    preferences: userPreferences,
-    results: quizResults,
+    preferences: preferencesString,
+    results: resultsString,
   };
 
-  const blob = new Blob([JSON.stringify(downloadData)], { type: 'application/json' });
   const worker = new Worker('worker.js', { type: 'module' });
 
   worker.onmessage = (e) => {
     if (e.data) {
-      // Create a download link for the zip file
+      // Download link 
       const downloadLink = document.body.appendChild(Object.assign(document.createElement("a"), {
         download: "quiz_results.zip",
         href: URL.createObjectURL(e.data),
@@ -268,11 +249,18 @@ function downloadUserData() {
     }
   };
 
+  // Send the local storage data to the worker
+  worker.postMessage({
+    preferences: localStorage.getItem("quizPreferences") || '{}',
+    results: localStorage.getItem("quizResults") || '{}',
+    questionsArray: questionsArray,
+    incorrectAnswers: incorrectAnswerCounter,
+    correctAnswers: correctAnswerCounter,
+  });
 
-
-  // Send the JSON blob to the worker
-  worker.postMessage(blob);
 }
+
+
 
 // EVENT LISTENERS
 userForm.addEventListener("submit", () => startQuiz(), false);
