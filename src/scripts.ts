@@ -12,10 +12,12 @@ import {
   loadPreferencesButton,
   numberOfQuestions,
   overallResultCard,
+  questionCards,
   questionsCategory,
   questionsDifficulty,
   quizSection,
   resultsAnswers,
+  saveDataButton,
   shuffleCatsButton,
   startNewQuizButton,
   startQuizButton,
@@ -54,10 +56,10 @@ function loadPreferencesAndResults() {
   const resultsString = localStorage.getItem("quizResults");
 
   if (preferencesString) {
-    const preferences: Preferences = JSON.parse(preferencesString);
-    questionsCategory.value = preferences.category;
-    questionsDifficulty.value = preferences.difficulty;
-    numberOfQuestions.value = preferences.numOfQuestions;
+    const { category, difficulty, numOfQuestions }: Preferences = JSON.parse(preferencesString);
+    questionsCategory.value = category;
+    questionsDifficulty.value = difficulty;
+    numberOfQuestions.value = numOfQuestions;
   }
 
   if (resultsString) {
@@ -77,9 +79,6 @@ function submitForm(event: Event, questionIndex: number, correctAnswer: string) 
   if (selectedOption) {
     const userAnswer = selectedOption.value;
     localStorage.setItem(`userAnswer_q${questionIndex}`, userAnswer);
-    console.log(
-      `Question ${questionIndex} - User's Answer: ${userAnswer}, Correct Answer: ${correctAnswer}`
-    );
   } else {
     alert("Please select an answer.");
   }
@@ -88,7 +87,6 @@ function submitForm(event: Event, questionIndex: number, correctAnswer: string) 
 //SAVE EVERYTHING FROM USER
 function savePreferencesAndResults() {
   const preferences = {
-    name: userName.value,
     category: questionsCategory.value,
     difficulty: questionsDifficulty.value,
     numQuestions: numberOfQuestions.value,
@@ -97,6 +95,7 @@ function savePreferencesAndResults() {
   const results = {
     correctAnswers: correctAnswerCounter,
     incorrectAnswers: incorrectAnswerCounter,
+    questions: questionsArray,
   };
 
   localStorage.setItem("quizPreferences", JSON.stringify(preferences));
@@ -125,7 +124,6 @@ function startQuiz() {
       displayQuestions(questionsArray);
     })
     .catch((error: Error) => console.error("Error fetching trivia questions:", error));
-
 }
 
 // GENERATE QUESTIONS BASED ON USER CHOICE
@@ -196,11 +194,13 @@ function displayResults() {
   resultsAnswers.innerHTML = '';
   downloadButton.classList.remove('hidden');
   startNewQuizButton.classList.remove('hidden');
+  saveDataButton.classList.remove('hidden');
 
   questionsArray.forEach((question, index) => {
     const userAnswer = localStorage.getItem(`userAnswer_q${index + 1}`) as string;
     const isCorrect: boolean = userAnswer === question.correct_answer;
     const resultText = document.createElement('div');
+
     resultText.innerHTML = `
     <h2>Question ${index + 1}</h2>
     <p>${question.question}</p>
@@ -219,18 +219,13 @@ function displayResults() {
   overallResultCard.textContent = `Overall Results: correct answers: ${correctAnswerCounter} and incorrect answers: ${incorrectAnswerCounter}`;
   resultsAnswers.appendChild(answersCard);
   resultsAnswers.appendChild(overallResultCard);
-  savePreferencesAndResults();
+  localStorage.setItem("userResults", JSON.stringify(resultsAnswers));
 }
 
 //LOAD DATA FROM LOCAL STORAGE AND USE IT FOR THE DOWNLOAD FILE
 function downloadUserData() {
   const preferencesString = localStorage.getItem("quizPreferences");
   const resultsString = localStorage.getItem("quizResults");
-
-  const downloadData = {
-    preferences: preferencesString,
-    results: resultsString,
-  };
 
   const worker = new Worker('worker.js', { type: 'module' });
 
@@ -251,15 +246,12 @@ function downloadUserData() {
 
   // Send the local storage data to the worker
   worker.postMessage({
-    preferences: localStorage.getItem("quizPreferences") || '{}',
-    results: localStorage.getItem("quizResults") || '{}',
-    questionsArray: questionsArray,
+    preferences: preferencesString || '{}',
+    results: resultsString || '{}',
     incorrectAnswers: incorrectAnswerCounter,
     correctAnswers: correctAnswerCounter,
   });
-
 }
-
 
 
 // EVENT LISTENERS
@@ -270,4 +262,5 @@ startNewQuizButton.addEventListener("click", () => startNewQuiz());
 displayResultsButton.addEventListener("click", () => displayResults());
 loadPreferencesButton.addEventListener('click', () => loadPreferencesAndResults());
 downloadButton.addEventListener('click', () => downloadUserData());
+saveDataButton.addEventListener('click', () => savePreferencesAndResults());
 document.addEventListener("DOMContentLoaded", () => fetchRandomCatPicture());

@@ -1,6 +1,7 @@
 
 // GLOBAL VARIABLES AND INTERFACES
 export interface Question {
+  [x: string]: any;
   questionText: string;
   incorrect_answers: string[];
   correct_answer: string;
@@ -17,6 +18,7 @@ export interface CatImageData {
 };
 
 export interface Preferences {
+  name?: string;
   category: string;
   difficulty: string;
   numOfQuestions: string;
@@ -38,6 +40,7 @@ export const startQuizButton = document.getElementById('startButton') as HTMLAnc
 export const shuffleCatsButton = document.getElementById('catButton') as HTMLAnchorElement;
 export const startNewQuizButton = document.getElementById('startNewQuiz') as HTMLAnchorElement;
 export const displayResultsButton = document.getElementById('resultsButton') as HTMLAnchorElement;
+export const saveDataButton = document.getElementById('saveMyData') as HTMLAnchorElement;
 export const downloadContainer = document.getElementById('downloadContainer') as HTMLDivElement;
 export const downloadButton = document.getElementById('downloadBtn') as HTMLAnchorElement;
 export const loadPreferencesButton = document.getElementById('loadButton') as HTMLAnchorElement;
