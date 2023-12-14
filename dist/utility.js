@@ -1,0 +1,24 @@
+;
+;
+;
+;
+// GLOBAL HTML ELEMENTS
+export const userForm = document.getElementById("userForm");
+export const quizSection = document.getElementById("quizSection");
+export const catSection = document.querySelector(".cat-section");
+export const resultsAnswers = document.getElementById('resultsSection');
+export const answersCard = document.getElementById('answersCard');
+export const overallResultCard = document.getElementById('overallResult');
+export const userName = document.getElementById("userName") || null;
+export const questionsCategory = document.getElementById("category") || null;
+export const questionsDifficulty = document.getElementById("difficulty") || null;
+export const numberOfQuestions = document.getElementById("numQuestions") || null;
+export const startQuizButton = document.getElementById('startButton');
+export const shuffleCatsButton = document.getElementById('catButton');
+export const startNewQuizButton = document.getElementById('startNewQuiz');
+export const displayResultsButton = document.getElementById('resultsButton');
+export const downloadContainer = document.getElementById('downloadContainer');
+export const downloadButton = document.getElementById('downloadBtn');
+export const loadPreferencesButton = document.getElementById('loadButton');
+export const questionCards = document.getElementById('questionCards');
+export const buttonSection = document.getElementById('buttonSection');

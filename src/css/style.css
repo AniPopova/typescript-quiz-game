@@ -1,0 +1,159 @@
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  font-family: 'Poppins', sans-serif;
+}
+
+.body {
+  font-family: Arial, Helvetica, sans-serif;
+
+  background: linear-gradient(to right, rgba(248, 243, 243, 0.6), rgba(255, 255, 255, 0.9)),
+    url("../images/milad-fakurian-58Z17lnVS4U-unsplash.jpg") center / cover, no-repeat;
+}
+
+.header {
+  background-color: #6e1111;
+  color: antiquewhite;
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  padding: 10px;
+  text-align: center;
+}
+
+/* QUIZ SECTION */
+.quiz-section {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-evenly;
+  margin: 100px;
+}
+
+.card {
+  width: 400px;
+  height: 200px;
+  margin: 20px;
+  padding: 10px;
+  border-radius: 15px;
+  border: 3px solid whitesmoke;
+  box-shadow: 0 4px 8px rgba(197, 4, 4, 0.9);
+  transition: transform 0.3s;
+}
+
+.card:hover {
+  background-color: #6e1111;
+  color: antiquewhite;
+  border-color: black;
+  box-shadow: 0 8px 16px 0 rgba(11, 73, 73, 0.2);
+  transform: scale(1.05);
+}
+
+/* TEXT INSIDE CARDS */
+.quiz-question {
+  margin-bottom: 20px;
+  text-align: center;
+}
+
+/* RESULT SECTION */
+.results-section {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-evenly;
+  margin: 100px;
+}
+
+.answer-card {
+  width: 400px;
+  margin: 20px;
+  padding: 10px;
+  border-radius: 15px;
+  border: 3px solid rgb(77, 63, 63);
+  box-shadow: 0 4px 8px rgba(116, 158, 123, 1);
+  transition: transform 0.3s;
+}
+
+.answer-card:hover {
+  background-color: rgb(77, 63, 63);
+  color: antiquewhite;
+  border-color: black;
+  box-shadow: 0 8px 16px 0 rgba(11, 73, 73, 0.2);
+  transform: scale(1.05);
+}
+
+/* FORM AND BUTTONS*/
+.user-form {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  width: 400px;
+  margin: 80px;
+  padding: 20px;
+  border-radius: 10px;
+  border: 3px solid #5e6a71;
+  box-shadow: 0 4px 8px rgba(197, 4, 4, 0.2);
+  background-color: rgb(234, 210, 178);
+}
+
+.flex-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
+
+.label {
+  font-size: 14px;
+  margin: 10px;
+}
+
+.button {
+  cursor: pointer;
+  width: fit-content;
+  height: fit-content;
+  background-color: #5e6a71;
+  color: rgb(237, 230, 230);
+  border: none;
+  border-radius: 5px;
+  margin: 5px;
+  padding: 8px;
+  text-decoration: none;
+}
+
+.button.quiz-question-button {
+  font-size: 15px;
+  margin-top: 20px;
+  justify-content: center;
+  display: inline-block; 
+}
+
+.button:hover {
+  background-color: rgb(117, 197, 117);
+  color: rgb(7, 7, 7);
+}
+
+/* CAT SECTION */
+.cat-section {
+  width: 370px;
+  height: auto;
+  border-radius: 15px;
+  border: 3px solid rgb(77, 63, 63);
+  box-shadow: 0 4px 8px rgba(197, 4, 4, 0.2);
+  background-color: #914d4d;
+  color: antiquewhite;
+  display:flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.image {
+  width: 260px;
+  height: auto;
+}
+
+/* CREATED TO HIDE AND SHOW SECTIONS */
+.hidden {
+  display: none;
+}

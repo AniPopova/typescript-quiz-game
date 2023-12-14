@@ -1,1 +1,1 @@
-# typescript-quiz-game
+# quiz-game-typescript

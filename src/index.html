@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="../src/css/style.css">
+    <title>Quiz game</title>
+</head>
+
+<body class="body">
+    <header class="header">
+        <h1>Quiz game</h1>
+    </header>
+    <section id="mainSection" class="main-section">
+        <div class="flex-container">
+            <form id="userForm" class="user-form">
+                <label class="label" for="name">Name:</label>
+                <input type="text" id="name" aria-label="Your Name" autocomplete="name">
+
+                <label class="label" for="category">Select Category:</label>
+                <select id="category" class="category" aria-label="Select Quiz Category">
+                    <option value="9">General Knowledge</option>
+                    <option value="20">Mythology</option>
+                    <option value="27">Animals</option>
+                    <option value="26">Celebrities</option>
+                </select>
+
+                <label class="label" for="difficulty">Select Difficulty:</label>
+                <select id="difficulty" class="difficulty" aria-label="Select Difficulty Level">
+                    <option value="easy">Easy</option>
+                    <option value="medium">Medium</option>
+                    <option value="hard">Hard</option>
+                </select>
+
+                <label class="label" for="numQuestions">Number of Questions:</label>
+                <input id="numQuestions" class="label" type="number" min="1" max="10" value="2"
+                    aria-label="Number of Questions">
+
+                <a id="startButton" class="button" href="#" aria-label="Start Quiz">Start Quiz</a>
+                <br>
+                <a id="loadButton" class="button" href="#" aria-label="Load data">Load preferences</a>
+            </form>
+            <div class="cat-section">
+                <h2>Smile, It is a wonderful day!❤</h2>
+                <img id="catImage" class="image" alt="Random Cat Picture" />
+                <a id="catButton" class="button" href="#" aria-label="Shuffle cat pictures button">Click me!</a>
+            </div>
+        </div>
+    </section>
+
+    <section id="quizSection" class="flex-container quiz-section">
+        <div id="questionsCards" class="quiz-section">
+
+        </div>
+    </section>
+    <section id="buttonSection" class="hidden">
+        <div id="buttonContainer" class="flex-container button-container">
+            <a id="startNewQuiz" class="button hidden" href="#" aria-label="Start New Quiz">Start New Quiz</a>
+            <br>
+            <a id="resultsButton" class="button" href="#" aria-label="Display results">Display results</a>
+            <br>
+            <a id="downloadBtn" class="button hidden" href="#" aria-label="Download Quiz Data">Download Your Data</a>
+        </div>
+    </section>
+    <section id="resultsSection" class="results-section">
+        <div id="answersCard" class="answer-card">
+        </div>
+        <div id="overallResult" class="flex-container answer-card">
+        </div>
+    </section>
+
+    <script src="../dist/scripts.js" type="module" defer></script>
+
+</body>
+
+</html>
