@@ -12,7 +12,7 @@ import {
   loadPreferencesButton,
   numberOfQuestions,
   overallResultCard,
-  questionCards,
+  questionCards, // not used
   questionsCategory,
   questionsDifficulty,
   quizSection,
@@ -23,7 +23,10 @@ import {
   startQuizButton,
   userForm,
   userName
-} from './utility.js'
+} from './utility.js';
+
+// There might be a better way of importin all these
+// unitlity.js or .ts?
 
 
 let correctAnswerCounter: number = 0;
@@ -38,13 +41,12 @@ function fetchRandomCatPicture() {
   fetch(urlForCats)
     .then((response) =>
       response.json())
-    .then((data: Array<CatImageData>) => {
+    .then((data: CatImageData[]) => {
       const catImage = document.getElementById("catImage") as HTMLImageElement;
+      // what if data[0] doesn't exist?
       return catImage.src = data[0].url;
     })
-    .catch((error: Error) => {
-      console.error("Error fetching cat picture:", error);
-    });
+    .catch(console.error); // you can be lazy sometimes and just pass console.error to the catch
 
   quizSection.classList.add('hidden');
   resultsAnswers.classList.add('hidden');
@@ -56,7 +58,7 @@ function loadPreferencesAndResults() {
   const resultsString = localStorage.getItem("quizResults");
 
   if (preferencesString) {
-    const { category, difficulty, numOfQuestions }: Preferences = JSON.parse(preferencesString);
+    const { category, difficulty, numOfQuestions } = JSON.parse(preferencesString) as Preferences;
     questionsCategory.value = category;
     questionsDifficulty.value = difficulty;
     numberOfQuestions.value = numOfQuestions;
@@ -77,8 +79,7 @@ function submitForm(event: Event, questionIndex: number, correctAnswer: string) 
   ) as HTMLInputElement;
 
   if (selectedOption) {
-    const userAnswer = selectedOption.value;
-    localStorage.setItem(`userAnswer_q${questionIndex}`, userAnswer);
+    localStorage.setItem(`userAnswer_q${questionIndex}`, selectedOption.value);
   } else {
     alert("Please select an answer.");
   }
@@ -115,19 +116,18 @@ function startQuiz() {
   let difficulty = questionsDifficulty.value;
   let numberQuestions = numberOfQuestions.value;
 
+  // can put the url in a variable above
   fetch(
     `https://opentdb.com/api.php?amount=${numberQuestions}&category=${category}&difficulty=${difficulty}&type=multiple`
   )
     .then((response) => response.json())
-    .then((data: QuizData) => {
-      questionsArray = data.results;
-      displayQuestions(questionsArray);
-    })
+    .then(displayQuestions)
     .catch((error: Error) => console.error("Error fetching trivia questions:", error));
 }
 
 // GENERATE QUESTIONS BASED ON USER CHOICE
-function displayQuestions(questions: Question[]) {
+function displayQuestions({ results: questions }: QuizData) {
+  questionsArray = questions;
   quizSection.innerHTML = "";
   resultsAnswers.classList.add('hidden');
   questions.forEach((question, index) => {
@@ -255,12 +255,12 @@ function downloadUserData() {
 
 
 // EVENT LISTENERS
-userForm.addEventListener("submit", () => startQuiz(), false);
-startQuizButton.addEventListener("click", () => startQuiz());
-shuffleCatsButton.addEventListener("click", () => fetchRandomCatPicture());
-startNewQuizButton.addEventListener("click", () => startNewQuiz());
-displayResultsButton.addEventListener("click", () => displayResults());
-loadPreferencesButton.addEventListener('click', () => loadPreferencesAndResults());
-downloadButton.addEventListener('click', () => downloadUserData());
-saveDataButton.addEventListener('click', () => savePreferencesAndResults());
-document.addEventListener("DOMContentLoaded", () => fetchRandomCatPicture());
+userForm.addEventListener("submit", startQuiz, false);
+startQuizButton.addEventListener("click", startQuiz);
+shuffleCatsButton.addEventListener("click", fetchRandomCatPicture);
+startNewQuizButton.addEventListener("click", startNewQuiz);
+displayResultsButton.addEventListener("click", displayResults);
+loadPreferencesButton.addEventListener('click', loadPreferencesAndResults);
+downloadButton.addEventListener('click', downloadUserData);
+saveDataButton.addEventListener('click', savePreferencesAndResults);
+document.addEventListener("DOMContentLoaded", fetchRandomCatPicture);
